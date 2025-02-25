@@ -21,9 +21,9 @@
 // No definitions needed since we will generate from channel
 // and whether differential or single-ended
 
-// Bits 3:2 PD1,PD0 Power down , refernece selection
+// Bits 3:2 PD1,PD0 Power down , reference selection
 #define PD_BTWN_CONV 0x0 // Power down betweed A/D conversions
-#define IREF_OFF_AD_ON 0x04 // Internal reference OFF, A/D converter ON
+#define IREF_OFF_AD_ON 0x04 // Internal reference OFF, A/D converter ON (default)
 #define IREF_ON_AD_OFF 0x08 // Internal reference ON, A/D conveter OFF
 #define IREF_ON_AD_ON 0x0C // Internal reference ON, A/D converter ON
 // LSB 1:0 not used XX
@@ -39,7 +39,16 @@ class ADS7828{
   // the standard i2c instance Wire.
   // If there are multiple I2C channels, you can pass in a pointer to a
   // a non-standard one (e.g, Wire1)
+  // By default PD1:PD0 are IREF_OFF_AD_ON
   void begin(uint8_t i2caddr, TwoWire *twire = &Wire);
+
+  // Set the PD1:PD0 bits
+  // pdval should be one of:
+  // PD_BTWN_CONV 0x0 Power down betweed A/D conversions
+  // IREF_OFF_AD_ON 0x04 Internal reference OFF, A/D converter ON (default)
+  // IREF_ON_AD_OFF 0x08 Internal reference ON, A/D conveter OFF
+  // IREF_ON_AD_ON 0x0C Internal reference ON, A/D converter ON
+  void setpd(uint8_t pdval);
   
   // read single-ended channel data
   uint16_t read(uint8_t channel);
@@ -52,6 +61,7 @@ class ADS7828{
   // XXX I think _i2caddr ought to be uint8_t but that gives
   // a compiler warning because it's apparently declared an int in TwoWire
   int _i2caddr;
+  uint8_t _pdbits;
   uint16_t _readData(uint8_t channel, bool single);
 };
 

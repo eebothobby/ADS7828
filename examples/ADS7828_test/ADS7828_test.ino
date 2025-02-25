@@ -21,6 +21,12 @@ void setup()
   // If using Wire2
   // adc.begin(0, &Wire2);
 
+  // By default, the IREF is off (external reference voltage)
+  // and AD is on.
+  // If you want to use internal reference istead of external, call:
+  //
+  // adc.setpd(IREF_ON_AD_ON);
+
   Serial.begin(115200);
   delay(300);
 }
